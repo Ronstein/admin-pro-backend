@@ -3,12 +3,38 @@ const Hospital = require("../models/hospital");
 
 const getHospitales = async (req, res = response) => {
 
-    const hospitales = await Hospital.find()
-        .populate('usuario', 'nombre img');
+    const desde = Number(req.query.desde) || 0;
+    const limite = Number(req.query.limite) || 0;
+
+    // const hospitales = await Hospital.find()
+    //     .populate('usuario', 'nombre img')
+    //     .skip(desde)
+    //     .limit(limite);
+
+    // const [hospitales, total] = await Promise.all([
+    //     Hospital.find()
+    //         .populate('usuario', 'nombre img')
+    //         .skip(desde)
+    //         .limit(limite),
+    //     Hospital.countDocuments()
+    // ]);
+
+    // Crea una consulta base y ajusta según el valor de `limite`
+    const hospitalesQuery = Hospital.find().populate('usuario', 'nombre img').skip(desde);
+
+    if (limite > 0) {
+        hospitalesQuery.limit(limite);
+    }
+
+    const [hospitales, total] = await Promise.all([
+        hospitalesQuery,
+        Hospital.countDocuments()
+    ]);
 
     res.json({
         ok: true,
-        hospitales
+        hospitales,
+        total
     })
 }
 
