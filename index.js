@@ -29,8 +29,9 @@ app.use('/api/medicos', require('./routes/medicos'));
 app.use('/api/todo', require('./routes/busquedas'));
 app.use('/api/upload', require('./routes/uploads'));
 
+// Usa el puerto asignado por Render o el puerto 3000 para desarrollo local
+const PORT = process.env.PORT || 3000;
 
-
-app.listen(process.env.PORT, () => {
-    console.log(`Servidor corriendo en el puerto: ${process.env.PORT}`);
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto: ${PORT}`);
 });
